@@ -1,0 +1,38 @@
+[
+    {
+        "name": "f-secure site. with 'SUOJAAMME SINUA' text",
+        "url": "http://www.f-secure.com/fi/web/home_fi/home",
+        "requirement": {
+            "text": "SUOJAAMME SINUA"
+        }
+    },
+    {
+        "name": "f-secure site. bad url",
+        "url": "http://www.f-secure.com/bad_url",
+        "requirement": {
+            "tag": "title"
+        }
+    },
+    {
+        "name": "stackoverflow.com. with 'sign up' text",
+        "url": "http://stackoverflow.com/",
+        "requirement": {
+            "text": "sign up"
+        }
+    },
+    {
+        "name": "NY Times. Link with 'Survived' text",
+        "url": "http://www.nytimes.com/",
+        "requirement": {
+            "tag": "a",
+            "text": "Survived"
+        }
+    },
+    {
+        "name": "NY Times. Link class 'test-class'",
+        "url": "http://www.nytimes.com/",
+        "requirement": {
+            "class_": "test-class"
+        }
+    }
+]

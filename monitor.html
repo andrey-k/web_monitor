@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Sites monitor</title>
+        <meta name="description" content="shows monitored web sites and their current status">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html {
+                font-size: 62.5%;
+            }
+
+            body {
+                font-size: 1.4rem;
+            }
+            header {
+                text-align: center;
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            a,
+            a:hover {
+                text-decoration: none;
+                color: hsl(244, 86%, 35%);
+                margin: 10px;
+                display: block;
+            }
+            .ok {
+                color: hsl(131, 38%, 50%);
+            }
+            .error {
+                color: hsl(3, 60%, 50%);
+            }
+            .container {
+                margin: auto;
+                max-width: 90rem;
+                min-width: 40rem;
+                padding: 1.5rem;
+            }
+            .row {
+                width: 100%;
+                overflow: auto;
+                border-bottom: 1px solid hsl(246, 2%, 20%);
+            }
+            .row div {
+                float: left;
+            }
+            .row p {
+                margin: 10px;
+            }
+            .row:nth-child(odd) {
+                background: hsl(246, 2%, 80%)
+            }
+            .row.header {
+                color: white;
+                background: hsl(246, 2%, 50%);
+            }
+            .site-name {
+                width: 60%;
+            }
+            .status-code {
+                width: 20%;
+            }
+            .requirement {
+                width: 20%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Web sites and their status</header>
+        <section class="container">
+            <div class="row header">
+                <div class="site-name">
+                    <p>Name</p>
+                </div>
+                <div class="status-code">
+                    <p>Status (time s)</p>
+                </div>
+                <div class="requirement">
+                    <p>Is Valid</p>
+                </div>
+            </div>
+            <div id="content">
+                <div class="row">
+                    <p>No data</p>
+                </div>
+            </div>
+        </section>
+        <script type="text/javascript">
+            'use strict';
+            document.addEventListener('DOMContentLoaded', function(){
+                getData();
+                // run ajax call every 10 sec and update page
+                window.setInterval(getData, 10000);
+            });
+
+            function getData() {
+                var request = new XMLHttpRequest();
+                request.open('GET', '/get_data', true);
+
+                request.onload = function() {
+                  var data;
+                  if (request.status >= 200 && request.status < 400){
+                    data = JSON.parse(request.responseText);
+                  } else {
+                    data = null;
+                  }
+                  updatePage(data);
+                };
+
+                request.onerror = function() {
+                    // There was a connection error of some sort
+                    // TODO: implement this
+                    console.log('please, handle me');
+                };
+
+                request.send();
+            }
+
+            function updatePage(data) {
+                // update page with new data
+                // TODO: implement logic if there are no data
+                var dataHolder = document.getElementById('content'),
+                    statusClass;
+
+                dataHolder.innerHTML = '';
+                data.forEach(function(site){
+                    var rowHolder = document.createElement('div'),
+                        linkHolder = document.createElement('div'),
+                        link = document.createElement('a'),
+                        codeHolder = document.createElement('div'),
+                        codeText = document.createElement('p'),
+                        requirementHolder = document.createElement('div'),
+                        requirementText = document.createElement('p');
+
+                    link.setAttribute('href', site.url);
+                    link.innerHTML = site.name;
+                    linkHolder.setAttribute('class', 'site-name');
+                    linkHolder.appendChild(link);
+
+                    statusClass = 'info';
+                    codeText.innerHTML = site.status + ' (' + site.time + 's)';
+                    if(site.status >= 200 && site.status < 300) {
+                        statusClass = 'ok';
+                    } else if (site.status >= 400) {
+                        statusClass = 'error';
+                    }
+                    codeText.setAttribute('class', statusClass);
+                    codeHolder.setAttribute('class', 'status-code');
+                    codeHolder.appendChild(codeText);
+
+                    requirementText.innerHTML = site.requirement;
+                    requirementHolder.setAttribute('class', 'requirement');
+                    requirementHolder.appendChild(requirementText);
+
+                    rowHolder.setAttribute('class', 'row');
+                    rowHolder.appendChild(linkHolder);
+                    rowHolder.appendChild(codeHolder);
+                    rowHolder.appendChild(requirementHolder);
+                    dataHolder.appendChild(rowHolder);
+                });
+            }
+        </script>
+    </body>
+</html>

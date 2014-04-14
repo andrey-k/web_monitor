@@ -16,4 +16,5 @@ USAGE:
 python monitor.py [-f FILE, --file FILE] [-t TIME_INTERVAL, --time_interval TIME_INTERVAL] [-s, --start_server]
 
 NOTE:
-To check existence of the class write "class_" in requirements
+- To check existence of the class write "class_" in requirements
+- Server returns proper json data to ajax call ONLY after first full check sites from sites list
